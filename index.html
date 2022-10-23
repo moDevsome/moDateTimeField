@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>moDateTimeField Demo</title>
+    </head>
+    <body>
+        <form action="#" method="post">
+            <h3>Exemple 1</h3>
+            <label for="exemple_1">
+                A date field (Y-m-d) with SQL preformating and binded value
+            </label>
+            <input type="text" id="exemple_1" name="exemple_1" value="2018-04-18">
+            <h3>Exemple 2</h3>
+            <label for="exemple_2">
+                A time field (H-i-s) with SQL preformating and binded value
+            </label>
+            <input type="text" id="exemple_2" name="exemple_2" value="10:18:00">
+            <h3>Exemple 3</h3>
+            <label for="exemple_3">
+                A datetime field (H-i-s) with SQL preformating and binded value
+            </label>
+            <input type="text" id="exemple_3" name="exemple_3" value="2018-05-20 18:18:30">
+        </form>
+        <script src="moDateTimeField.js"></script>
+        <script>
+            new moDateTimeField(document.getElementById("exemple_1"), {
+                type: "date"
+            }).render();
+            new moDateTimeField(document.getElementById("exemple_2"), {
+                type: "time"
+            }).render();
+            new moDateTimeField(document.getElementById("exemple_3")).render();
+        </script>
+    </body>
+</html>
