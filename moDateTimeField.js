@@ -127,6 +127,56 @@ class moDateTimeField {
         this.dateObject = new Date();
 
     }
+    checkdate() { // Check if the current date field values represent a valide date
+
+
+        let yearValue = typeof(this.fields["year"].value) !== "undefined" ? parseInt(this.fields["year"].value) : this.dateObject.getFullYear();
+        let monthValue = typeof(this.fields["month"].value) !== "undefined" ? parseInt(this.fields["month"].value) : this.dateObject.getMonth() + 1;
+        let dayValue = typeof(this.fields["day"].value) !== "undefined" ? parseInt(this.fields["day"].value) : this.dateObject.getDate();
+
+        if(isNaN(yearValue) || isNaN(monthValue) || isNaN(dayValue)) {
+
+            return false;
+
+        }
+
+        // We define if the year is Bissextil
+        let isBissextil = false;
+        if((yearValue % 4 === 0 && yearValue % 100 > 0) || (yearValue % 400 === 0)) {
+            isBissextil = true;
+        }
+
+        let maxDayByMonth = [0, 31, isBissextil === true ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // Max number of day by month
+        if(dayValue > maxDayByMonth[monthValue]) {
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+    checktime() { // Check if the current time field values represent a valide time
+
+        let hoursValue = typeof(this.fields["hours"].value) !== "undefined" ? parseInt(this.fields["hours"].value) : this.dateObject.getHours();
+        let minutesValue = typeof(this.fields["minutes"].value) !== "undefined" ? parseInt(this.fields["minutes"].value) : this.dateObject.getMinutes();
+        let secondesValue = typeof(this.fields["secondes"].value) !== "undefined" ? parseInt(this.fields["secondes"].value) : this.dateObject.getSeconds();
+
+        if(isNaN(hoursValue) || isNaN(minutesValue) || isNaN(secondesValue)) {
+
+            return false;
+
+        }
+
+        if((hoursValue < 0 || hoursValue > 23) || (minutesValue < 0 || minutesValue > 59) || (secondesValue < 0 || secondesValue > 59)) {
+
+            return false;
+
+        }
+
+        return true;
+
+    }
     addzerobefore(value) { // If a value is under 10, we add a 0 before
 
         let valueInt = parseInt(value);
@@ -492,13 +542,8 @@ class moDateTimeField {
 
                                 } else {
 
-                                    let yearValue = typeof(this.fields["year"].value) !== "undefined" ? this.addzerobefore(this.fields["year"].value) : "00";
-                                    let monthValue = typeof(this.fields["month"].value) !== "undefined" ? this.addzerobefore(this.fields["month"].value) : "00";
-                                    let dayValue = typeof(this.fields["day"].value) !== "undefined" ? this.addzerobefore(this.fields["day"].value) : "00";
-
                                     // Check if date is valide
-                                    let testDateString = yearValue +"-"+ monthValue +"-"+ dayValue;
-                                    if(!isNaN(Date.parse(testDateString))) {
+                                    if(this.checkdate()) {
                                         this.fieldsValueBackup[dateField] = field.value;
                                         this.output();
                                     }
@@ -671,20 +716,13 @@ class moDateTimeField {
 
                             } else {
 
-                                let hoursValue = typeof(this.fields["hours"].value) !== "undefined" ? this.addzerobefore(this.fields["hours"].value) : "00";
-                                let minutesValue = typeof(this.fields["minutes"].value) !== "undefined" ? this.addzerobefore(this.fields["minutes"].value) : "00";
-                                let secondesValue = typeof(this.fields["secondes"].value) !== "undefined" ? this.addzerobefore(this.fields["secondes"].value) : "00";
-
-                                // Check if datetime is valide
-                                let testDateString = this.current("year") +"-"+ this.current("month") +"-"+ this.current("day");
-                                testDateString += " "+ hoursValue +":"+ minutesValue +":"+ secondesValue;
-                                if(!isNaN(Date.parse(testDateString))) {
+                                if(this.checktime()) {
                                     this.fieldsValueBackup[timeField] = field.value;
                                     this.output();
                                 }
                                 else {
 
-                                    console.warn("moDatetimeField : The provided value is not a valid datetime. Value : \""+ testDateString +"\"");
+                                    console.warn("moDatetimeField : The provided value is not a valid time.");
                                     field.value = this.fieldsValueBackup[timeField];
 
                                 }
