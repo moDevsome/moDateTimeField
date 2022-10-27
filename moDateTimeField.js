@@ -40,8 +40,19 @@ class moDateTimeField {
 
         this.DOMElement = DOMElement;
         this.moDTFElement = document.createElement('div');
-        this.fields = {}
-        this.fieldsValueBackup = {}
+        this.fields = {};
+        this.fieldsValueBackup = {};
+        this.callbackResponse = {
+            result: false,
+            inputValue: "",
+            outputValue: "",
+            yearValue: "",
+            monthValue: "",
+            dayValue: "",
+            hoursValue: "",
+            minutesValue: "",
+            secondesValue: ""
+        }
 
         // Define default options
         this.type = "datetime"; // Avalable types : "datetime","date","time"
@@ -51,6 +62,7 @@ class moDateTimeField {
         this.hasCalendar = false; // TRUE to enable the calendar
         this.showCalendarButton = '<a href="#">Afficher le calendrier</a>';
         this.lang = navigator.language;
+        this.callback = null;
 
         if(typeof(options) === "object") {
 
@@ -60,11 +72,12 @@ class moDateTimeField {
 
             }
 
-            typeof(options.inputFormat) === "string" ? options.inputFormat : this.inputFormat;
-            typeof(options.outputFormat) === "string" ? options.outputFormat : this.outputFormat;
-            typeof(options.fieldFormat) === "string" ? options.fieldFormat : this.fieldFormat;
-            typeof(options.hasCalendar) === "boolean" ? options.hasCalendar : this.hasCalendar;
-            typeof(options.showCalendarButton) === "string" ? options.showCalendarButton : this.showCalendarButton;
+            this.inputFormat = typeof(options.inputFormat) === "string" ? options.inputFormat : this.inputFormat;
+            this.outputFormat = typeof(options.outputFormat) === "string" ? options.outputFormat : this.outputFormat;
+            this.fieldFormat = typeof(options.fieldFormat) === "string" ? options.fieldFormat : this.fieldFormat;
+            this.hasCalendar = typeof(options.hasCalendar) === "boolean" ? options.hasCalendar : this.hasCalendar;
+            this.showCalendarButton = typeof(options.showCalendarButton) === "string" ? options.showCalendarButton : this.showCalendarButton;
+            this.callback = typeof(options.callback) === "function" ? options.callback : this.callback;
 
         }
 
@@ -239,28 +252,34 @@ class moDateTimeField {
             switch(fieldKey) {
 
                 case "year" :
+                    this.callbackResponse.yearValue = stringValue;
                     output = output.replace("Y", stringValue);
                     output = output.replace("y", stringValue.length === 2 ? stringValue : stringValue.substring(2, 2));
                     break;
 
                 case "month" :
+                    this.callbackResponse.monthValue = stringValue;
                     output = output.replace("m", field.value);
                     break;
 
                 case "day" :
+                    this.callbackResponse.dayValue = stringValue;
                     output = output.replace("d", stringValue);
                     break;
 
                 case "hours" :
+                    this.callbackResponse.hoursValue = stringValue;
                     output = output.replace("H", stringValue);
                     output = output.replace("h", stringValue);
                     break;
 
                 case "minutes" :
+                    this.callbackResponse.minutesValue = stringValue;
                     output = output.replace("i", stringValue);
                     break;
 
                 case "secondes" :
+                    this.callbackResponse.secondesValue = stringValue;
                     output = output.replace("s", stringValue);
                     break;
 
@@ -271,7 +290,18 @@ class moDateTimeField {
 
         }
 
+        this.callbackResponse.inputValue = this.DOMElement.value;
         this.DOMElement.value = output;
+        this.callbackResponse.outputValue = output;
+
+        this.callbackResponse.result = true;
+
+
+        if(typeof(this.callback) === "function") {
+
+            this.callback(this.callbackResponse);
+
+        }
 
     }
     render() {
@@ -484,6 +514,8 @@ class moDateTimeField {
                     // Set the event listener
                     field.addEventListener("change", () => {
 
+                        this.callbackResponse.result = false;
+
                         // Check if date is valide
                         if(this.checkdate()) {
                             this.fieldsValueBackup[dateField] = field.value;
@@ -492,6 +524,7 @@ class moDateTimeField {
                         else {
 
                             console.warn("moDatetimeField : The provided value is not a valid date.");
+                            // TODO:enable / disable auto-correction
                             field.value = this.fieldsValueBackup[dateField];
 
                         }
@@ -515,6 +548,8 @@ class moDateTimeField {
 
                     // Set the event listener
                     field.addEventListener("input", (inputEvent) => {
+
+                        this.callbackResponse.result = false;
 
                         field.classList.remove("mo-datetime-field-error");
 
@@ -543,6 +578,7 @@ class moDateTimeField {
                                     }
                                     else {
 
+                                        // TODO:enable / disable auto-correction
                                         field.value = this.fieldsValueBackup[dateField];
 
                                     }
@@ -691,6 +727,7 @@ class moDateTimeField {
                 field.addEventListener("input", (inputEvent) => {
 
                     field.classList.remove("mo-datetime-field-error");
+                    this.callbackResponse.result = false;
 
                     if(field.value.length === 0) { // The content of the field has been erased
 
@@ -717,6 +754,7 @@ class moDateTimeField {
                                 else {
 
                                     console.warn("moDatetimeField : The provided value is not a valid time.");
+                                    // TODO:enable / disable auto-correction
                                     field.value = this.fieldsValueBackup[timeField];
 
                                 }
