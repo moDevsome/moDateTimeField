@@ -140,6 +140,13 @@ class moDateTimeField {
 
         }
 
+        // We check the month
+        if(monthValue < 0 || monthValue > 12) {
+
+            return false;
+
+        }
+
         // We define if the year is Bissextil
         let isBissextil = false;
         if((yearValue % 4 === 0 && yearValue % 100 > 0) || (yearValue % 400 === 0)) {
@@ -477,27 +484,14 @@ class moDateTimeField {
                     // Set the event listener
                     field.addEventListener("change", () => {
 
-                        // Checking the field
-                        let intValue = parseInt(field.value);
-                        if(!isNaN(intValue) && intValue > 0 && intValue < 13) {
-
-                            // Check if date is valide
-                            let testDateString = this.fields["year"].value +"-"+ this.fields["month"].value +"-"+ this.fields["day"].value;
-                            if(!isNaN(Date.parse(testDateString))) {
-                                this.fieldsValueBackup[dateField] = field.value;
-                                this.output();
-                            }
-                            else {
-
-                                console.warn("moDatetimeField : The provided value is not a valid date. Value : \""+ testDateString +"\"");
-                                field.value = this.fieldsValueBackup[dateField];
-
-                            }
-
+                        // Check if date is valide
+                        if(this.checkdate()) {
+                            this.fieldsValueBackup[dateField] = field.value;
+                            this.output();
                         }
                         else {
 
-                            console.warn("moDatetimeField : The provided value is not a valid date. Value : \""+ testDateString +"\"");
+                            console.warn("moDatetimeField : The provided value is not a valid date.");
                             field.value = this.fieldsValueBackup[dateField];
 
                         }
