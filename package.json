@@ -1,0 +1,25 @@
+{
+  "name": "modatetimefield",
+  "version": "1.0.0",
+  "description": "A vanilla JS library to create, handle and render html datetime fields.",
+  "main": "moDateTimeField.js",
+  "scripts": {
+    "sass": "sass --watch moDateTimeField.scss:moDateTimeField.min.css --style compressed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moDevsome/moDateTimeField.git"
+  },
+  "keywords": [
+    "date",
+    "datetime",
+    "time",
+    "field"
+  ],
+  "author": "Mickaël Outhier (moDevsome)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moDevsome/moDateTimeField/issues"
+  },
+  "homepage": "https://github.com/moDevsome/moDateTimeField#readme"
+}
