@@ -15,6 +15,10 @@
             </label>
             <input type="text" id="exemple_1" name="exemple_1" value="2018-04-18">
             <div class="output" id="exemple1-output">
+                <h4>Input value</h4>
+                <p><span>2018-04-18</span></p>
+                <h4>Ouput value</h4>
+                <p><span class="callbacktest-output"></span></p>
                 <h4>Text value (in french format)</h4>
                 <p>Date : <span class="callbacktest-dateouput"></span></p>
             </div>
@@ -25,6 +29,10 @@
             </label>
             <input type="text" id="exemple_2" name="exemple_2" value="10:18:00">
             <div class="output" id="exemple2-output">
+                <h4>Input value</h4>
+                <p><span>10:18:00</span></p>
+                <h4>Ouput value</h4>
+                <p><span class="callbacktest-output"></span></p>
                 <h4>Text value (in french format)</h4>
                 <p>Time : <span class="callbacktest-timeouput"></span></p>
             </div>
@@ -35,6 +43,10 @@
             </label>
             <input type="text" id="exemple_3" name="exemple_3" value="2018-05-20 18:18:30">
             <div class="output" id="exemple3-output">
+                <h4>Input value</h4>
+                <p><span>2018-05-20 18:18:30</span></p>
+                <h4>Ouput value</h4>
+                <p><span class="callbacktest-output"></span></p>
                 <h4>Text value (in french format)</h4>
                 <p>Date : <span class="callbacktest-dateouput"></span></p>
                 <p>Time : <span class="callbacktest-timeouput"></span></p>
@@ -46,6 +58,7 @@
                 type: "date",
                 callback: (callbackResponse) => {
                     document.querySelector("div#exemple1-output > p > span.callbacktest-dateouput").innerText = callbackResponse.dayValue +"/"+ callbackResponse.monthValue + "/"+ callbackResponse.yearValue;
+                    document.querySelector("div#exemple1-output > p > span.callbacktest-output").innerText = callbackResponse.outputValue;
                 }
             }).render();
 
@@ -53,6 +66,7 @@
                 type: "time",
                 callback: (callbackResponse) => {
                     document.querySelector("div#exemple2-output > p > span.callbacktest-timeouput").innerText = callbackResponse.hoursValue +":"+ callbackResponse.minutesValue + ":"+ callbackResponse.secondesValue;
+                    document.querySelector("div#exemple2-output > p > span.callbacktest-output").innerText = callbackResponse.outputValue;
                 }
             }).render();
 
@@ -60,6 +74,7 @@
                 callback: (callbackResponse) => {
                     document.querySelector("div#exemple3-output > p > span.callbacktest-dateouput").innerText = callbackResponse.dayValue +"/"+ callbackResponse.monthValue + "/"+ callbackResponse.yearValue;
                     document.querySelector("div#exemple3-output > p > span.callbacktest-timeouput").innerText = callbackResponse.hoursValue +":"+ callbackResponse.minutesValue + ":"+ callbackResponse.secondesValue;
+                    document.querySelector("div#exemple3-output > p > span.callbacktest-output").innerText = callbackResponse.outputValue;
                 }
             }).render();
         </script>
