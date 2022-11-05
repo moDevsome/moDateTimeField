@@ -14,36 +14,52 @@
                 A date field (Y-m-d) with SQL preformating and binded value
             </label>
             <input type="text" id="exemple_1" name="exemple_1" value="2018-04-18">
+            <div class="output" id="exemple1-output">
+                <h4>Text value (in french format)</h4>
+                <p>Date : <span class="callbacktest-dateouput"></span></p>
+            </div>
+
             <h3>Exemple 2</h3>
             <label for="exemple_2">
                 A time field (H-i-s) with SQL preformating and binded value
             </label>
             <input type="text" id="exemple_2" name="exemple_2" value="10:18:00">
+            <div class="output" id="exemple2-output">
+                <h4>Text value (in french format)</h4>
+                <p>Time : <span class="callbacktest-timeouput"></span></p>
+            </div>
+
             <h3>Exemple 3</h3>
             <label for="exemple_3">
                 A datetime field (H-i-s) with SQL preformating and binded value
             </label>
             <input type="text" id="exemple_3" name="exemple_3" value="2018-05-20 18:18:30">
-            <div id="output">
-                <h4>Output</h4>
-                <p>Date : <span id="callbacktest-dateouput"></span></p>
-                <p>Time : <span id="callbacktest-timeouput"></span></p>
+            <div class="output" id="exemple3-output">
+                <h4>Text value (in french format)</h4>
+                <p>Date : <span class="callbacktest-dateouput"></span></p>
+                <p>Time : <span class="callbacktest-timeouput"></span></p>
             </div>
         </form>
         <script src="moDateTimeField.js"></script>
         <script>
             new moDateTimeField(document.getElementById("exemple_1"), {
-                type: "date"
+                type: "date",
+                callback: (callbackResponse) => {
+                    document.querySelector("div#exemple1-output > p > span.callbacktest-dateouput").innerText = callbackResponse.dayValue +"/"+ callbackResponse.monthValue + "/"+ callbackResponse.yearValue;
+                }
             }).render();
 
             new moDateTimeField(document.getElementById("exemple_2"), {
-                type: "time"
+                type: "time",
+                callback: (callbackResponse) => {
+                    document.querySelector("div#exemple2-output > p > span.callbacktest-timeouput").innerText = callbackResponse.hoursValue +":"+ callbackResponse.minutesValue + ":"+ callbackResponse.secondesValue;
+                }
             }).render();
 
-            new moDateTimeField(document.getElementById("exemple_3"),{
+            new moDateTimeField(document.getElementById("exemple_3"), {
                 callback: (callbackResponse) => {
-                    document.getElementById("callbacktest-dateouput").innerText = callbackResponse.dayValue +"/"+ callbackResponse.monthValue + "/"+ callbackResponse.yearValue;
-                    document.getElementById("callbacktest-timeouput").innerText = callbackResponse.hoursValue +":"+ callbackResponse.minutesValue + ":"+ callbackResponse.secondesValue;
+                    document.querySelector("div#exemple3-output > p > span.callbacktest-dateouput").innerText = callbackResponse.dayValue +"/"+ callbackResponse.monthValue + "/"+ callbackResponse.yearValue;
+                    document.querySelector("div#exemple3-output > p > span.callbacktest-timeouput").innerText = callbackResponse.hoursValue +":"+ callbackResponse.minutesValue + ":"+ callbackResponse.secondesValue;
                 }
             }).render();
         </script>

@@ -4,7 +4,7 @@
   "description": "A vanilla JS library to create, handle and render html datetime fields.",
   "main": "moDateTimeField.js",
   "scripts": {
-    "sass": "sass --watch moDateTimeField.scss:moDateTimeField.min.css --style compressed"
+    "sass": "sass --watch style.scss:style.min.css --style compressed"
   },
   "repository": {
     "type": "git",
