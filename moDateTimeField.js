@@ -153,6 +153,14 @@ class moDateTimeField {
 
         }
 
+        // We check the year
+        if(yearValue < -9999 || yearValue > 9999) {
+
+            console.error("moDatetimeField : The year value must be between -9999 and 9999. Given value : "+ yearValue);
+            return false;
+
+        }
+
         // We check the month
         if(monthValue < 0 || monthValue > 12) {
 
@@ -197,16 +205,21 @@ class moDateTimeField {
         return true;
 
     }
-    addzerobefore(value) { // If a value is under 10, we add a 0 before
+    addzerobefore(value, length) { // Add a 0 before the string input @value while the @length is not reached
 
-        let valueInt = parseInt(value);
-        if(valueInt < 10) {
+        length = isNaN(length) ? 2 : length;
+        let output = value.toString();
 
-            return "0"+ valueInt.toString();
+        if(output.length >= length) return output;
+
+        do {
+
+            output = "0"+ output;
 
         }
+        while(output.length < length)
 
-        return valueInt.toString();
+        return output;
 
     }
     current(dateTimeDataID) { // Get a current value from the Date object
@@ -239,7 +252,7 @@ class moDateTimeField {
                 break;
         }
 
-        return this.addzerobefore(value);
+        return this.addzerobefore(value, dateTimeDataID === "year" ? 4 : 2);
 
     }
     output() {
@@ -247,7 +260,7 @@ class moDateTimeField {
         let output = this.outputFormat;
         for(let [fieldKey, field] of Object.entries(this.fields)) {
 
-            let stringValue = this.addzerobefore(field.value);
+            let stringValue = this.addzerobefore(field.value, fieldKey === "year" ? 4 : 2);
 
             switch(fieldKey) {
 
@@ -295,7 +308,6 @@ class moDateTimeField {
         this.callbackResponse.outputValue = output;
 
         this.callbackResponse.result = true;
-
 
         if(typeof(this.callback) === "function") {
 
@@ -544,8 +556,6 @@ class moDateTimeField {
                     field.value = dateDOMElementValue[dateField];
                     this.fieldsValueBackup[dateField] = dateDOMElementValue[dateField];
 
-                    let inputMinLenght = dateField === "year" ? 4 : 1;
-
                     // Set the event listener
                     field.addEventListener("input", (inputEvent) => {
 
@@ -564,7 +574,7 @@ class moDateTimeField {
                             // We use a timer to check if the value is valid or not
                             window.setTimeout(() => {
 
-                                if(field.value.length === 0 || field.value.length < inputMinLenght) { // The content of the field has been erased
+                                if(field.value.length === 0) { // The content of the field has been erased
 
                                     field.classList.add("mo-datetime-field-error");
                                     this.DOMElement.value = "";
