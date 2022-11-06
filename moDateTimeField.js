@@ -161,6 +161,12 @@ class moDateTimeField {
 
         }
 
+        // We define if the year is Bissextil
+        let isBissextil = false;
+        if((yearValue % 4 === 0 && yearValue % 100 > 0) || (yearValue % 400 === 0)) {
+            isBissextil = true;
+        }
+
         // We check the month
         if(monthValue < 0 || monthValue > 12) {
 
@@ -168,14 +174,9 @@ class moDateTimeField {
 
         }
 
-        // We define if the year is Bissextil
-        let isBissextil = false;
-        if((yearValue % 4 === 0 && yearValue % 100 > 0) || (yearValue % 400 === 0)) {
-            isBissextil = true;
-        }
-
+        // We check the day
         let maxDayByMonth = [0, 31, isBissextil === true ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // Max number of day by month
-        if(dayValue > maxDayByMonth[monthValue]) {
+        if(dayValue <= 0 || dayValue > maxDayByMonth[monthValue]) {
 
             return false;
 
@@ -210,7 +211,18 @@ class moDateTimeField {
         length = isNaN(length) ? 2 : length;
         let output = value.toString();
 
-        if(output.length >= length) return output;
+        // --- Resolve issue #1 "The year values under 0 are not managed" ---
+        // We manage the case of the negative date
+        // If yes, we remove the negative char and we put it back after processing
+        let negativePrefix = "";
+        if(output[0] === "-") {
+
+            negativePrefix = "-";
+            output = output.substring(1);
+
+        }
+
+        if(output.length >= length) return negativePrefix + output;
 
         do {
 
@@ -219,7 +231,7 @@ class moDateTimeField {
         }
         while(output.length < length)
 
-        return output;
+        return negativePrefix + output;
 
     }
     current(dateTimeDataID) { // Get a current value from the Date object
